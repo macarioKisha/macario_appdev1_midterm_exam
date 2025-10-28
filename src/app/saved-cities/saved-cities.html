@@ -1,0 +1,43 @@
+<div class="container py-4">
+  <div class="d-flex align-items-center mb-3">
+    <h3 class="me-3">Saved Cities</h3>
+    <button class="btn btn-sm btn-outline-secondary me-2" (click)="back()">Back</button>
+    <button class="btn btn-sm btn-danger" (click)="clearAll()" [disabled]="savedCities.length === 0">Clear All</button>
+    <small class="text-muted ms-auto">Total: {{ savedCities.length }}</small>
+  </div>
+
+  <div *ngIf="savedCities.length === 0" class="alert alert-secondary">No saved cities.</div>
+
+  <div *ngIf="savedCities.length > 0">
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th>City</th>
+          <th>Temperature</th>
+          <th>Description</th>
+          <th class="text-end">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let c of savedCities; let i = index">
+          <td>{{ c.city || (c.location?.name ?? '—') }}</td>
+          <td>
+            <ng-container *ngIf="c.weather?.current; else noTemp">
+              {{ c.weather.current.temperature }}°C
+            </ng-container>
+            <ng-template #noTemp>—</ng-template>
+          </td>
+          <td>
+            <ng-container *ngIf="c.weather?.current?.weather_descriptions?.length; else noDesc">
+              {{ c.weather.current.weather_descriptions[0] }}
+            </ng-container>
+            <ng-template #noDesc>{{ c.error || '—' }}</ng-template>
+          </td>
+          <td class="text-end">
+            <button class="btn btn-sm btn-danger" (click)="remove(i)">Remove</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,52 @@
+<div class="container weather-dashboard py-4">
+  <div class="d-flex flex-wrap gap-2 mb-3 align-items-center">
+    <input type="text" class="form-control flex-grow-1 input-width" [(ngModel)]="cityInput" placeholder="Enter city name" (keyup.enter)="addCity()">
+    <button class="btn btn-primary" (click)="addCity()">Add City</button>
+    <button class="btn btn-success" (click)="saveCities()" [disabled]="cities.length === 0">Save All</button>
+    <small class="text-muted ms-auto">Total: {{ cities.length }}</small>
+  </div>
+
+  <div *ngIf="apiError" class="alert alert-danger py-2">{{ apiError }}</div>
+
+  <div *ngIf="cities.length === 0" class="alert alert-secondary">No cities added yet. Enter a city name above to get started!</div>
+
+  <div *ngIf="cities.length > 0">
+    <table class="table table-striped table-hover align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>City</th>
+          <th>Icon</th>
+          <th>Temperature</th>
+          <th>Description</th>
+          <th class="text-end">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let city of cities">
+          <td>{{ city.city }}</td>
+          <td>
+            <ng-container *ngIf="city.weather; else iconLoading">
+              <img [src]="city.weather.current.weather_icons[0]" alt="icon for {{city.city}}" class="rounded weather-icon">
+            </ng-container>
+            <ng-template #iconLoading>
+              <div class="spinner-border spinner-border-sm text-secondary" role="status"><span class="visually-hidden">Loading</span></div>
+            </ng-template>
+          </td>
+          <td>
+            <ng-container *ngIf="city.weather; else tempLoading">{{ city.weather.current.temperature }}°C</ng-container>
+            <ng-template #tempLoading><span class="text-muted small">Loading</span></ng-template>
+          </td>
+          <td>
+            <ng-container *ngIf="city.weather; else descLoading">{{ city.weather.current.weather_descriptions[0] }}</ng-container>
+            <ng-template #descLoading><span class="text-muted small">Loading</span></ng-template>
+            <div *ngIf="city.error" class="text-danger small mt-1">{{ city.error }}</div>
+          </td>
+          <td class="text-end">
+            <button class="btn btn-sm btn-danger" (click)="removeCityByName(city.city)">Delete</button>
+           <button class="btn btn-danger btn-sm" (click)="saveCities()">Remove</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
