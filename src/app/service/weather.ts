@@ -17,13 +17,13 @@ export interface WeatherData {
   providedIn: 'root'
 })
 export class Weather {
-  private apiKey = '10d4ed9e7b4aba044f087548598d864f7';
-  private baseUrl = 'http://api.weatherstack.com/current';
+  private apiKey = '10d4ed9e7b4aba044f087548598d864f';
+  private baseUrl = 'https://api.weatherstack.com/current';
 
   constructor(private http: HttpClient) {}
 
   getWeather(city: string): Observable<WeatherData> {
-    const url = `${this.baseUrl}?access_key=${this.apiKey}&query=${encodeURIComponent(city)}`;
+    const url = `${this.baseUrl}?access_key=${this.apiKey}&query=${city}`;
     return this.http.get<WeatherData>(url);
   }
 }
